@@ -68,6 +68,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
       };
     }
 
+    if (exception['code'] === '22008') {
+      errorResponse = {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: ['Date/time field value out of range'],
+        error: 'DATE/TIME Out of Range',
+      };
+    }
+
     if (exception['code'] === 'NotFound') {
       errorResponse = {
         statusCode: HttpStatus.BAD_REQUEST,

@@ -324,6 +324,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@fnando/cpf@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@fnando/cpf/-/cpf-1.0.2.tgz#e78c46c5ee599b17f5d81b46c336b0e6eec8ace4"
+  integrity sha512-lfSfdONVQ/1aKvsA7PnawQjSoE5PXOyHich3WFIbAuYRMAw6Ax1FmIWxPxCfHP/Rh0R2cG/CxaimUW7NI6rgEQ==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -953,6 +958,11 @@
   integrity sha512-KswB5C7Kwduwjj04Ykz+AjvPcfgv/37Za24O2EDzYNbwyzOo8+ydtvzUfZ5UMguiVu29Gx44l1A6VsPPcmYu9w==
   dependencies:
     source-map "^0.6.1"
+
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 "@types/validator@13.0.0":
   version "13.0.0"
