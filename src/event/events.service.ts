@@ -16,8 +16,6 @@ export class EventsService {
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
     private usersService: UsersService,
-
-    @Inject(forwardRef(() => VacanciesService))
     private vacanciesService: VacanciesService,
   ) {}
 

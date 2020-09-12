@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { EnterClientDto } from './dto/enter-client.dto';
 import { PublicClient } from './models/PublicClient';
@@ -8,6 +8,17 @@ import { DeviceInfo } from './entities/device-info.entity';
 import { SetClientDto } from './dto/set-client.dto';
 import { v4 as uuid } from 'uuid';
 import { ClientEscort } from './entities/client-escort.entity';
+import { AppUtil } from '../shared/helpers/app-util';
+import {
+  EventDateHasPassedException,
+  NoVacancyException,
+} from '../shared/helpers/custom-exception';
+import { Vacancy } from '../vacancies/vacancy.entity';
+import { format } from 'date-fns';
+import { EventsService } from '../event/events.service';
+import { SubscribeClientDto } from './dto/subscribe-client.dto';
+import { VacanciesService } from '../vacancies/vacancies.service';
+import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
 
 @Injectable()
 export class ClientsService {
@@ -16,6 +27,8 @@ export class ClientsService {
     private readonly clientRepository: Repository<Client>,
     @InjectRepository(ClientEscort)
     private readonly clientEscortRepository: Repository<ClientEscort>,
+    private eventsService: EventsService,
+    private vacanciesService: VacanciesService,
   ) {}
 
   async enter(enterClientDto: EnterClientDto): Promise<PublicClient> {
@@ -107,5 +120,65 @@ export class ClientsService {
 
   async findAll(): Promise<Client[]> {
     return this.clientRepository.find();
+  }
+
+  async subscribe(
+    token: string,
+    subscribeClientDto: SubscribeClientDto,
+  ): Promise<void> {
+    const clientFound = await this.findOneByToken(token);
+    const eventFound = await this.eventsService.findOne(
+      subscribeClientDto.eventId,
+    );
+
+    const ocupiedSlots = await this.vacanciesService.getVacancyCount(
+      eventFound,
+    );
+
+    const currentClientAndScortsQty = AppUtil.countClientPeoples(clientFound);
+
+    if (ocupiedSlots + currentClientAndScortsQty > eventFound.vacancy) {
+      throw new NoVacancyException();
+    }
+
+    const { dayOfWeek, startTime } = eventFound;
+
+    const vacancyDate = AppUtil.getFullDateTimeFromOneWeekDay(dayOfWeek);
+
+    if (!AppUtil.testEventDateTimeIsAfterDateTime(startTime, dayOfWeek)) {
+      throw new EventDateHasPassedException();
+    }
+
+    const vacancy = new Vacancy();
+
+    vacancy.client = clientFound;
+    vacancy.event = eventFound;
+    vacancy.dateWasSet = format(vacancyDate, 'yyyy-MM-dd');
+
+    await this.vacanciesService.saveEntity(vacancy);
+  }
+
+  async unsubscribe(
+    token: string,
+    unsubscribeClientDto: UnsubscribeClientDto,
+  ): Promise<void> {
+    const clientFound = await this.findOneByToken(token);
+    const eventFound = await this.eventsService.findOne(
+      unsubscribeClientDto.eventId,
+    );
+
+    const lessDateOfWeek = AppUtil.mondayOfWeekStr();
+
+    const { dayOfWeek, startTime } = eventFound;
+
+    if (!AppUtil.testEventDateTimeIsAfterDateTime(startTime, dayOfWeek)) {
+      throw new EventDateHasPassedException();
+    }
+
+    await this.vacanciesService.deleteEntity({
+      event: eventFound,
+      dateWasSet: MoreThanOrEqual(lessDateOfWeek),
+      client: clientFound,
+    });
   }
 }

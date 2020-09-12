@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
-export class UnsubscribeDto {
+export class SubscribeClientDto {
   @IsNotEmpty()
   @IsUUID()
   eventId: string;

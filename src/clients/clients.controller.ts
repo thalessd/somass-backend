@@ -10,6 +10,8 @@ import { EnterClientDto } from './dto/enter-client.dto';
 import { ClientsService } from './clients.service';
 import { PublicClient } from './models/PublicClient';
 import { SetClientDto } from './dto/set-client.dto';
+import { SubscribeClientDto } from './dto/subscribe-client.dto';
+import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
 
 @Controller('client')
 export class ClientsController {
@@ -26,5 +28,21 @@ export class ClientsController {
     @Body() setClientDto: SetClientDto,
   ): Promise<void> {
     return this.clientsService.set(token, setClientDto);
+  }
+
+  @Post('subscribe/:token')
+  async subscribe(
+    @Param('token', ParseUUIDPipe) token: string,
+    @Body() subscribeClientDto: SubscribeClientDto,
+  ): Promise<void> {
+    return this.clientsService.subscribe(token, subscribeClientDto);
+  }
+
+  @Post('unsubscribe/:token')
+  async unsubscribe(
+    @Param('token', ParseUUIDPipe) token: string,
+    @Body() unsubscribeClientDto: UnsubscribeClientDto,
+  ): Promise<void> {
+    return this.clientsService.unsubscribe(token, unsubscribeClientDto);
   }
 }

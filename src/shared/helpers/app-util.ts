@@ -1,4 +1,4 @@
-import { parse, addDays, startOfWeek, isAfter } from 'date-fns';
+import { parse, addDays, startOfWeek, isAfter, format } from 'date-fns';
 import { DayOfWeek } from '../../event/enum/day-of-week.enum';
 import { Client } from '../../clients/entities/client.entity';
 import { SimpleClient } from '../../clients/models/SimpleClient';
@@ -47,5 +47,9 @@ export class AppUtil {
     );
 
     return this.countClientPeoples(client);
+  }
+
+  static mondayOfWeekStr(): string {
+    return format(startOfWeek(new Date(), { weekStartsOn: 1 }), 'yyyy-MM-dd');
   }
 }
