@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { VacanciesService } from '../vacancies/vacancies.service';
+import { SimpleEvent } from './models/SimpleEvent';
+import { AppUtil } from '../shared/helpers/app-util';
+import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
 
 @Injectable()
 export class EventsService {
@@ -12,6 +16,9 @@ export class EventsService {
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
     private usersService: UsersService,
+
+    @Inject(forwardRef(() => VacanciesService))
+    private vacanciesService: VacanciesService,
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string): Promise<Event> {
@@ -36,6 +43,48 @@ export class EventsService {
 
   async findAll(): Promise<Event[]> {
     return this.eventRepository.find({ order: { createdAt: 'DESC' } });
+  }
+
+  async findAllWithVacancies(): Promise<SimpleEvent[]> {
+    const eventsFounded = await this.eventRepository.find({
+      order: { createdAt: 'DESC' },
+      select: ['id', 'location', 'startTime', 'dayOfWeek', 'vacancy'],
+    });
+
+    const simpleEventPromises = eventsFounded.map(
+      async (data: Partial<Event>) => {
+        const simpleEvent = new SimpleEvent();
+
+        const simpleVacancy = await this.vacanciesService.getAllSimpleVacancies(
+          data.id,
+        );
+
+        const peoplePerClient = simpleVacancy.map<number>(
+          (sVacancy: SimpleVacancy) => {
+            return AppUtil.countSimpleClientPeoples(sVacancy.simpleClient);
+          },
+        );
+
+        const occupiedVacancies =
+          peoplePerClient.length > 0
+            ? peoplePerClient.reduce((tot, num) => tot + num)
+            : 0;
+
+        simpleEvent.id = data.id;
+        simpleEvent.location = data.location;
+        simpleEvent.date = AppUtil.getEventDateTime(
+          data.startTime,
+          data.dayOfWeek,
+        );
+        simpleEvent.totalVacancies = data.vacancy;
+        simpleEvent.occupiedVacancies = occupiedVacancies;
+        simpleEvent.simpleVacancy = simpleVacancy;
+
+        return simpleEvent;
+      },
+    );
+
+    return Promise.all(simpleEventPromises);
   }
 
   async update(

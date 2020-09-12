@@ -10,5 +10,6 @@ import { DeviceInfo } from './entities/device-info.entity';
   imports: [TypeOrmModule.forFeature([DeviceInfo, ClientEscort, Client])],
   controllers: [ClientsController],
   providers: [ClientsService],
+  exports: [ClientsService],
 })
 export class ClientsModule {}

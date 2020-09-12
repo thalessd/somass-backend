@@ -3,9 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -18,18 +16,17 @@ export class Vacancy {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne((type) => Client, {
+  @ManyToOne((type) => Client, {
     eager: true,
     nullable: false,
   })
-  @JoinColumn()
   client: Client;
 
   @ManyToOne((type) => Event, { eager: true, nullable: false })
   event: Event;
 
   @Column({ type: 'date', nullable: false })
-  dateWasSet: Date;
+  dateWasSet: string;
 
   @CreateDateColumn()
   createdAt: Date;

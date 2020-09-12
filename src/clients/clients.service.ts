@@ -100,4 +100,12 @@ export class ClientsService {
 
     await this.clientRepository.save(clientFound);
   }
+
+  async findOneByToken(token: string): Promise<Client> {
+    return this.clientRepository.findOneOrFail({ where: { token } });
+  }
+
+  async findAll(): Promise<Client[]> {
+    return this.clientRepository.find();
+  }
 }

@@ -38,6 +38,9 @@ export class Client {
   @Column({ nullable: false })
   token: string;
 
+  @Column({ default: false })
+  blocked: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

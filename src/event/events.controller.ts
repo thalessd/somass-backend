@@ -17,6 +17,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { EventsService } from './events.service';
 import { Event } from './event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { SimpleEvent } from './models/SimpleEvent';
 
 @Controller('event')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -32,6 +33,12 @@ export class EventsController {
     const userId = request.user.id;
 
     return this.eventsService.create(createEventDto, userId);
+  }
+
+  @Get('grouped')
+  @Roles(Role.Admin)
+  findAllSimpleEvents(): Promise<SimpleEvent[]> {
+    return this.eventsService.findAllWithVacancies();
   }
 
   @Get(':id')
