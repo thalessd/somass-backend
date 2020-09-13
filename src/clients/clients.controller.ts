@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseUUIDPipe,
   Post,
@@ -12,6 +13,7 @@ import { PublicClient } from './models/PublicClient';
 import { SetClientDto } from './dto/set-client.dto';
 import { SubscribeClientDto } from './dto/subscribe-client.dto';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
+import { PublicEvent } from '../event/models/PublicEvent';
 
 @Controller('client')
 export class ClientsController {
@@ -44,5 +46,12 @@ export class ClientsController {
     @Body() unsubscribeClientDto: UnsubscribeClientDto,
   ): Promise<void> {
     return this.clientsService.unsubscribe(token, unsubscribeClientDto);
+  }
+
+  @Get('event/:token')
+  async event(
+    @Param('token', ParseUUIDPipe) token: string,
+  ): Promise<PublicEvent[]> {
+    return this.clientsService.event(token);
   }
 }

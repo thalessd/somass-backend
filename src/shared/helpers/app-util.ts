@@ -52,4 +52,10 @@ export class AppUtil {
   static mondayOfWeekStr(): string {
     return format(startOfWeek(new Date(), { weekStartsOn: 1 }), 'yyyy-MM-dd');
   }
+
+  static calcOccupiedVacancies(peoplePerClient: number[]): number {
+    return peoplePerClient.length > 0
+      ? peoplePerClient.reduce((tot, num) => tot + num)
+      : 0;
+  }
 }

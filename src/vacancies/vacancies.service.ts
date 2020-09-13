@@ -8,6 +8,8 @@ import { MoreThanOrEqual } from 'typeorm';
 import { SimpleVacancy } from './models/SimpleVacancy';
 import { SimpleClient } from '../clients/models/SimpleClient';
 import { ClientEscort } from '../clients/entities/client-escort.entity';
+import { Client } from '../clients/entities/client.entity';
+import { RequestedVacancy } from './models/RequestedVacancy';
 
 @Injectable()
 export class VacanciesService {
@@ -29,9 +31,7 @@ export class VacanciesService {
       AppUtil.countClientPeoples(data.client),
     );
 
-    return peoplePerClient.length > 0
-      ? peoplePerClient.reduce((tot, num) => tot + num)
-      : 0;
+    return AppUtil.calcOccupiedVacancies(peoplePerClient);
   }
 
   async getAllSimpleVacancies(eventId: string): Promise<SimpleVacancy[]> {
@@ -75,5 +75,31 @@ export class VacanciesService {
 
   async deleteEntity(criteria: FindConditions<Vacancy>): Promise<DeleteResult> {
     return this.vacancyRepository.delete(criteria);
+  }
+
+  async requested(client: Client): Promise<RequestedVacancy[]> {
+    const lessDateOfWeek = AppUtil.mondayOfWeekStr();
+
+    const partialVacancies: Partial<
+      Vacancy
+    >[] = await this.vacancyRepository.find({
+      where: {
+        client,
+        dateWasSet: MoreThanOrEqual(lessDateOfWeek),
+      },
+      select: ['id', 'event', 'dateWasSet', 'createdAt'],
+      relations: ['event'],
+    });
+
+    return partialVacancies.map<RequestedVacancy>((data: Partial<Vacancy>) => {
+      const requestedVacancy = new RequestedVacancy();
+
+      requestedVacancy.id = data.id;
+      requestedVacancy.dateWasSet = data.dateWasSet;
+      requestedVacancy.createdAt = data.createdAt;
+      requestedVacancy.event = data.event;
+
+      return requestedVacancy;
+    });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
+import { Event } from '../event/event.entity';
 import { EnterClientDto } from './dto/enter-client.dto';
 import { PublicClient } from './models/PublicClient';
 import { DeviceInfo } from './entities/device-info.entity';
@@ -19,6 +20,9 @@ import { EventsService } from '../event/events.service';
 import { SubscribeClientDto } from './dto/subscribe-client.dto';
 import { VacanciesService } from '../vacancies/vacancies.service';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
+import { RequestedVacancy } from '../vacancies/models/RequestedVacancy';
+import { PublicEvent } from '../event/models/PublicEvent';
+import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
 
 @Injectable()
 export class ClientsService {
@@ -180,5 +184,43 @@ export class ClientsService {
       dateWasSet: MoreThanOrEqual(lessDateOfWeek),
       client: clientFound,
     });
+  }
+
+  async event(token: string): Promise<PublicEvent[]> {
+    const clientFound = await this.findOneByToken(token);
+    const allEvents = await this.eventsService.findAllAvailable();
+
+    const requestedVacancies = await this.vacanciesService.requested(
+      clientFound,
+    );
+
+    const subscribedEventsIds = requestedVacancies.map<string>(
+      (data: RequestedVacancy) => data.event.id,
+    );
+
+    const publicEventsPromises = allEvents.map<Promise<PublicEvent>>(
+      async (data: Event) => {
+        const publicEvent = new PublicEvent();
+
+        const occupiedVacancies = await this.vacanciesService.getVacancyCount(
+          data,
+        );
+
+        publicEvent.id = data.id;
+        publicEvent.location = data.location;
+        publicEvent.dayOfWeek = data.dayOfWeek;
+        publicEvent.totalVacancies = data.vacancy;
+        publicEvent.occupiedVacancies = occupiedVacancies;
+        publicEvent.hasParticipation = subscribedEventsIds.includes(data.id);
+        publicEvent.hasPassed = !AppUtil.testEventDateTimeIsAfterDateTime(
+          data.startTime,
+          data.dayOfWeek,
+        );
+
+        return publicEvent;
+      },
+    );
+
+    return Promise.all(publicEventsPromises);
   }
 }

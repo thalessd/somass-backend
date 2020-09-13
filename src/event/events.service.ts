@@ -43,6 +43,13 @@ export class EventsService {
     return this.eventRepository.find({ order: { createdAt: 'DESC' } });
   }
 
+  async findAllAvailable(): Promise<Event[]> {
+    return this.eventRepository.find({
+      where: { available: true },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async findAllWithVacancies(): Promise<SimpleEvent[]> {
     const eventsFounded = await this.eventRepository.find({
       order: { createdAt: 'DESC' },
@@ -63,10 +70,9 @@ export class EventsService {
           },
         );
 
-        const occupiedVacancies =
-          peoplePerClient.length > 0
-            ? peoplePerClient.reduce((tot, num) => tot + num)
-            : 0;
+        const occupiedVacancies = AppUtil.calcOccupiedVacancies(
+          peoplePerClient,
+        );
 
         simpleEvent.id = data.id;
         simpleEvent.location = data.location;
