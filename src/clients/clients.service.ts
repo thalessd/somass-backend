@@ -250,6 +250,10 @@ export class ClientsService {
           data.startTime,
           data.dayOfWeek,
         );
+        publicEvent.date = AppUtil.getEventDateTime(
+          data.startTime,
+          data.dayOfWeek,
+        );
 
         return publicEvent;
       },
