@@ -1,4 +1,13 @@
-import { parse, addDays, startOfWeek, isAfter, format } from 'date-fns';
+import {
+  addDays,
+  addWeeks,
+  format,
+  isAfter,
+  parse,
+  startOfWeek,
+  getDay,
+  subDays,
+} from 'date-fns';
 import { DayOfWeek } from '../../event/enum/day-of-week.enum';
 import { Client } from '../../clients/entities/client.entity';
 import { SimpleClient } from '../../clients/models/SimpleClient';
@@ -6,7 +15,24 @@ import { ClientEscort } from '../../clients/entities/client-escort.entity';
 
 export class AppUtil {
   static getFullDateTimeFromOneWeekDay(dayOfWeek: DayOfWeek): Date {
-    return addDays(startOfWeek(new Date()), dayOfWeek);
+    const currentDayOfWeek = getDay(new Date());
+
+    if (dayOfWeek !== DayOfWeek.Sunday) {
+      return addDays(
+        startOfWeek(
+          currentDayOfWeek === 0 ? subDays(new Date(), 1) : new Date(),
+        ),
+        dayOfWeek,
+      );
+    }
+
+    // Se o dia que o cadastro está sendo feito for o
+    // domingo ele pega o dia atual
+    if (currentDayOfWeek === 0) {
+      return new Date();
+    }
+
+    return addWeeks(startOfWeek(new Date()), 1);
   }
 
   static getEventDateTime(

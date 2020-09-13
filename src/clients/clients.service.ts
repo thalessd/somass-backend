@@ -13,6 +13,7 @@ import { AppUtil } from '../shared/helpers/app-util';
 import {
   EventDateHasPassedException,
   IsSubscribedException,
+  MoreThanExpectedException,
   NoVacancyException,
 } from '../shared/helpers/custom-exception';
 import { Vacancy } from '../vacancies/vacancy.entity';
@@ -34,6 +35,8 @@ export class ClientsService {
     private eventsService: EventsService,
     private vacanciesService: VacanciesService,
   ) {}
+
+  private maxPeoplesByClient = 3;
 
   private async testIfClientIsSubscribedInFutureEvent(
     client: Client,
@@ -136,6 +139,10 @@ export class ClientsService {
           return clientEscort;
         },
       );
+    }
+
+    if (AppUtil.countClientPeoples(clientFound) > this.maxPeoplesByClient) {
+      throw new MoreThanExpectedException();
     }
 
     if (await this.testIfClientIsSubscribedInFutureEvent(clientFound)) {

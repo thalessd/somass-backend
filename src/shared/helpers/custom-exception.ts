@@ -38,3 +38,16 @@ export class IsSubscribedException extends HttpException {
     );
   }
 }
+
+export class MoreThanExpectedException extends HttpException {
+  constructor() {
+    super(
+      {
+        status: HttpStatus.FORBIDDEN,
+        message: 'More peoples than expected',
+        error: 'More Than Expected',
+      },
+      HttpStatus.FORBIDDEN,
+    );
+  }
+}
