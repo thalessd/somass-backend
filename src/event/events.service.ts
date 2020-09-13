@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 import { Event } from './event.entity';
@@ -9,6 +9,9 @@ import { VacanciesService } from '../vacancies/vacancies.service';
 import { SimpleEvent } from './models/SimpleEvent';
 import { AppUtil } from '../shared/helpers/app-util';
 import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
+import * as PDFDocument from 'pdfkit';
+import { Response } from 'express';
+import { ReportPDF } from './helpers/ReportPDF';
 
 @Injectable()
 export class EventsService {
@@ -55,6 +58,39 @@ export class EventsService {
       where: { available: true },
       select: ['id', 'dayOfWeek', 'startTime'],
     });
+  }
+
+  async generateReport(id: string, response: Response): Promise<void> {
+    const eventFound = await this.eventRepository.findOneOrFail({
+      where: { id },
+      select: ['id', 'location', 'startTime', 'dayOfWeek', 'vacancy'],
+    });
+
+    const simpleEvent = new SimpleEvent();
+
+    const simpleVacancy = await this.vacanciesService.getAllSimpleVacancies(
+      eventFound.id,
+    );
+
+    const peoplePerClient = simpleVacancy.map<number>(
+      (sVacancy: SimpleVacancy) => {
+        return AppUtil.countSimpleClientPeoples(sVacancy.simpleClient);
+      },
+    );
+
+    const occupiedVacancies = AppUtil.calcOccupiedVacancies(peoplePerClient);
+
+    simpleEvent.id = eventFound.id;
+    simpleEvent.location = eventFound.location;
+    simpleEvent.date = AppUtil.getEventDateTime(
+      eventFound.startTime,
+      eventFound.dayOfWeek,
+    );
+    simpleEvent.totalVacancies = eventFound.vacancy;
+    simpleEvent.occupiedVacancies = occupiedVacancies;
+    simpleEvent.simpleVacancy = simpleVacancy;
+
+    return ReportPDF.generate(simpleEvent, response);
   }
 
   async findAllWithVacancies(): Promise<SimpleEvent[]> {

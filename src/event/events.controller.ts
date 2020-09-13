@@ -8,6 +8,7 @@ import {
   Put,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -18,6 +19,7 @@ import { EventsService } from './events.service';
 import { Event } from './event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { SimpleEvent } from './models/SimpleEvent';
+import { Response } from 'express';
 
 @Controller('event')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -39,6 +41,15 @@ export class EventsController {
   @Roles(Role.Admin)
   findAllSimpleEvents(): Promise<SimpleEvent[]> {
     return this.eventsService.findAllWithVacancies();
+  }
+
+  @Get('report/:id')
+  @Roles(Role.Admin)
+  generateReport(
+    @Param('id') id: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    return this.eventsService.generateReport(id, response);
   }
 
   @Get(':id')
