@@ -25,3 +25,16 @@ export class NoVacancyException extends HttpException {
     );
   }
 }
+
+export class IsSubscribedException extends HttpException {
+  constructor() {
+    super(
+      {
+        status: HttpStatus.FORBIDDEN,
+        message: 'Is Subscribed in one event',
+        error: 'Is Subscribed',
+      },
+      HttpStatus.FORBIDDEN,
+    );
+  }
+}

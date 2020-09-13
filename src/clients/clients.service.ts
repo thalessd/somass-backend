@@ -12,6 +12,7 @@ import { ClientEscort } from './entities/client-escort.entity';
 import { AppUtil } from '../shared/helpers/app-util';
 import {
   EventDateHasPassedException,
+  IsSubscribedException,
   NoVacancyException,
 } from '../shared/helpers/custom-exception';
 import { Vacancy } from '../vacancies/vacancy.entity';
@@ -22,7 +23,6 @@ import { VacanciesService } from '../vacancies/vacancies.service';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
 import { RequestedVacancy } from '../vacancies/models/RequestedVacancy';
 import { PublicEvent } from '../event/models/PublicEvent';
-import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
 
 @Injectable()
 export class ClientsService {
@@ -34,6 +34,29 @@ export class ClientsService {
     private eventsService: EventsService,
     private vacanciesService: VacanciesService,
   ) {}
+
+  private async testIfClientIsSubscribedInFutureEvent(
+    client: Client,
+  ): Promise<boolean> {
+    const allEvents = await this.eventsService.findAllAvailable();
+
+    const requestedVacancies = await this.vacanciesService.requested(client);
+
+    const subscribedEventsIds = requestedVacancies.map<string>(
+      (data: RequestedVacancy) => data.event.id,
+    );
+
+    return !allEvents.every((data: Event) => {
+      const hasParticipation = subscribedEventsIds.includes(data.id);
+
+      const hasPassed = !AppUtil.testEventDateTimeIsAfterDateTime(
+        data.startTime,
+        data.dayOfWeek,
+      );
+
+      return hasPassed ? true : !hasParticipation;
+    });
+  }
 
   async enter(enterClientDto: EnterClientDto): Promise<PublicClient> {
     let client = await this.clientRepository.findOne({
@@ -113,6 +136,10 @@ export class ClientsService {
           return clientEscort;
         },
       );
+    }
+
+    if (await this.testIfClientIsSubscribedInFutureEvent(clientFound)) {
+      throw new IsSubscribedException();
     }
 
     await this.clientRepository.save(clientFound);
