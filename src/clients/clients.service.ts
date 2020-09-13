@@ -38,7 +38,7 @@ export class ClientsService {
   private async testIfClientIsSubscribedInFutureEvent(
     client: Client,
   ): Promise<boolean> {
-    const allEvents = await this.eventsService.findAllAvailable();
+    const allEventsThin = await this.eventsService.findAllAvailableThin();
 
     const requestedVacancies = await this.vacanciesService.requested(client);
 
@@ -46,7 +46,7 @@ export class ClientsService {
       (data: RequestedVacancy) => data.event.id,
     );
 
-    return !allEvents.every((data: Event) => {
+    return !allEventsThin.every((data: Partial<Event>) => {
       const hasParticipation = subscribedEventsIds.includes(data.id);
 
       const hasPassed = !AppUtil.testEventDateTimeIsAfterDateTime(

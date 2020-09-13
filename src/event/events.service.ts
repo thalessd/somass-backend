@@ -50,6 +50,13 @@ export class EventsService {
     });
   }
 
+  async findAllAvailableThin(): Promise<Partial<Event[]>> {
+    return this.eventRepository.find({
+      where: { available: true },
+      select: ['id', 'dayOfWeek', 'startTime'],
+    });
+  }
+
   async findAllWithVacancies(): Promise<SimpleEvent[]> {
     const eventsFounded = await this.eventRepository.find({
       order: { createdAt: 'DESC' },
