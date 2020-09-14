@@ -9,7 +9,6 @@ import { VacanciesService } from '../vacancies/vacancies.service';
 import { SimpleEvent } from './models/SimpleEvent';
 import { AppUtil } from '../shared/helpers/app-util';
 import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
-import * as PDFDocument from 'pdfkit';
 import { Response } from 'express';
 import { ReportPDF } from './helpers/ReportPDF';
 
