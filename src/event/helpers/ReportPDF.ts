@@ -4,6 +4,9 @@ import * as PDFDocument from 'pdfkit';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { SimpleVacancy } from '../../vacancies/models/SimpleVacancy';
+import { version } from 'pjson';
+
+console.log(version);
 
 type ListItem = {
   name: string;
@@ -104,7 +107,7 @@ export class ReportPDF {
 
     currentWidth += dividerSpacing;
 
-    const systemInfoTextLineOne = `Versão da Aplicação: 1.0.0`;
+    const systemInfoTextLineOne = `Versão da Aplicação: ${version}`;
     const systemInfoTextLineTwo = `Data de Geração: ${format(
       new Date(),
       "dd/MM/yyyy 'às' hh:mm",
