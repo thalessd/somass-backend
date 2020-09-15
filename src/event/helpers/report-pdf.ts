@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { SimpleEvent } from '../models/SimpleEvent';
+import { SimpleEvent } from '../models/simple-event';
 import * as PDFDocument from 'pdfkit';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

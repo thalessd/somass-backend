@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { VacanciesService } from '../vacancies/vacancies.service';
-import { SimpleEvent } from './models/SimpleEvent';
+import { SimpleEvent } from './models/simple-event';
 import { AppUtil } from '../shared/helpers/app-util';
 import { SimpleVacancy } from '../vacancies/models/simple-vacancy';
 import { Response } from 'express';

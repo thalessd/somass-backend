@@ -18,7 +18,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { EventsService } from './events.service';
 import { Event } from './event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { SimpleEvent } from './models/SimpleEvent';
+import { SimpleEvent } from './models/simple-event';
 import { Response } from 'express';
 
 @Controller('event')
