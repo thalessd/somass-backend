@@ -3,10 +3,8 @@ import { SimpleEvent } from '../models/SimpleEvent';
 import * as PDFDocument from 'pdfkit';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { SimpleVacancy } from '../../vacancies/models/SimpleVacancy';
+import { SimpleVacancy } from '../../vacancies/models/simple-vacancy';
 import { version } from 'pjson';
-
-console.log(version);
 
 type ListItem = {
   name: string;
@@ -14,7 +12,7 @@ type ListItem = {
   isEscort: boolean;
 };
 
-export class ReportPDF {
+export class ReportPdf {
   private static lineFooterY = 792;
   private static lineFooterSpace = 10;
 

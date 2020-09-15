@@ -4,7 +4,7 @@ import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { Event } from '../event/event.entity';
 import { EnterClientDto } from './dto/enter-client.dto';
-import { PublicClient } from './models/PublicClient';
+import { PublicClient } from './models/public-client';
 import { DeviceInfo } from './entities/device-info.entity';
 import { SetClientDto } from './dto/set-client.dto';
 import { v4 as uuid } from 'uuid';
@@ -22,8 +22,8 @@ import { EventsService } from '../event/events.service';
 import { SubscribeClientDto } from './dto/subscribe-client.dto';
 import { VacanciesService } from '../vacancies/vacancies.service';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
-import { RequestedVacancy } from '../vacancies/models/RequestedVacancy';
-import { PublicEvent } from '../event/models/PublicEvent';
+import { RequestedVacancy } from '../vacancies/models/requested-vacancy';
+import { PublicEvent } from '../event/models/public-event';
 
 @Injectable()
 export class ClientsService {

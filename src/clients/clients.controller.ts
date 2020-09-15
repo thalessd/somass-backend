@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { EnterClientDto } from './dto/enter-client.dto';
 import { ClientsService } from './clients.service';
-import { PublicClient } from './models/PublicClient';
+import { PublicClient } from './models/public-client';
 import { SetClientDto } from './dto/set-client.dto';
 import { SubscribeClientDto } from './dto/subscribe-client.dto';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
-import { PublicEvent } from '../event/models/PublicEvent';
+import { PublicEvent } from '../event/models/public-event';
 
 @Controller('client')
 export class ClientsController {

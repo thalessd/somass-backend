@@ -1,4 +1,4 @@
-import { SimpleClient } from '../../clients/models/SimpleClient';
+import { SimpleClient } from '../../clients/models/simple-client';
 
 export class SimpleVacancy {
   id: string;

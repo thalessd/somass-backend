@@ -5,11 +5,11 @@ import { Vacancy } from './vacancy.entity';
 import { AppUtil } from '../shared/helpers/app-util';
 import { Event } from '../event/event.entity';
 import { MoreThanOrEqual } from 'typeorm';
-import { SimpleVacancy } from './models/SimpleVacancy';
-import { SimpleClient } from '../clients/models/SimpleClient';
+import { SimpleVacancy } from './models/simple-vacancy';
+import { SimpleClient } from '../clients/models/simple-client';
 import { ClientEscort } from '../clients/entities/client-escort.entity';
 import { Client } from '../clients/entities/client.entity';
-import { RequestedVacancy } from './models/RequestedVacancy';
+import { RequestedVacancy } from './models/requested-vacancy';
 
 @Injectable()
 export class VacanciesService {

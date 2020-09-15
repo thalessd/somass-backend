@@ -8,9 +8,9 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { VacanciesService } from '../vacancies/vacancies.service';
 import { SimpleEvent } from './models/SimpleEvent';
 import { AppUtil } from '../shared/helpers/app-util';
-import { SimpleVacancy } from '../vacancies/models/SimpleVacancy';
+import { SimpleVacancy } from '../vacancies/models/simple-vacancy';
 import { Response } from 'express';
-import { ReportPDF } from './helpers/ReportPDF';
+import { ReportPdf } from './helpers/report-pdf';
 
 @Injectable()
 export class EventsService {
@@ -89,7 +89,7 @@ export class EventsService {
     simpleEvent.occupiedVacancies = occupiedVacancies;
     simpleEvent.simpleVacancy = simpleVacancy;
 
-    return ReportPDF.generate(simpleEvent, response);
+    return ReportPdf.generate(simpleEvent, response);
   }
 
   async findAllWithVacancies(): Promise<SimpleEvent[]> {

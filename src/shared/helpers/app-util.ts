@@ -10,7 +10,7 @@ import {
 } from 'date-fns';
 import { DayOfWeek } from '../../event/enum/day-of-week.enum';
 import { Client } from '../../clients/entities/client.entity';
-import { SimpleClient } from '../../clients/models/SimpleClient';
+import { SimpleClient } from '../../clients/models/simple-client';
 import { ClientEscort } from '../../clients/entities/client-escort.entity';
 
 export class AppUtil {

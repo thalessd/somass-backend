@@ -1,4 +1,4 @@
-import { SimpleVacancy } from '../../vacancies/models/SimpleVacancy';
+import { SimpleVacancy } from '../../vacancies/models/simple-vacancy';
 
 export class SimpleEvent {
   id: string;
