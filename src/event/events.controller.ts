@@ -37,10 +37,10 @@ export class EventsController {
     return this.eventsService.create(createEventDto, userId);
   }
 
-  @Get('grouped')
+  @Get('simple')
   @Roles(Role.Admin)
   findAllSimpleEvents(): Promise<SimpleEvent[]> {
-    return this.eventsService.findAllWithVacancies();
+    return this.eventsService.findAllSimpleEvents();
   }
 
   @Get('report/:id')

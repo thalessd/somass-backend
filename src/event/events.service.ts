@@ -92,7 +92,7 @@ export class EventsService {
     return ReportPdf.generate(simpleEvent, response);
   }
 
-  async findAllWithVacancies(): Promise<SimpleEvent[]> {
+  async findAllSimpleEvents(): Promise<SimpleEvent[]> {
     const eventsFounded = await this.eventRepository.find({
       order: { createdAt: 'DESC' },
       select: ['id', 'location', 'startTime', 'dayOfWeek', 'vacancy'],
