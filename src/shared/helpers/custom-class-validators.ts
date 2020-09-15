@@ -28,7 +28,7 @@ export class TimeIsValid implements ValidatorConstraintInterface {
   }
 
   validate(value: string): Promise<boolean> | boolean {
-    return !!value.match(/^[0-9]{1,2}:[0-9]{1,2}$/g);
+    return !!value.match(/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/g);
   }
 }
 
