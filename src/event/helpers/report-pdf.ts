@@ -37,7 +37,7 @@ export class ReportPdf {
     dancingScriptBold: 'assets/fonts/DancingScript-Bold.ttf',
   };
 
-  private static makeFooter(doc: PDFKit.PDFDocument) {
+  private static makeFooter(doc: any) {
     const logoWidth = 72;
     const logoHeight = 20;
 
@@ -126,7 +126,7 @@ export class ReportPdf {
   }
 
   private static makeHeader(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     simpleEvent: SimpleEvent,
     pageNumber: number,
     letterArray: string[],
@@ -173,7 +173,7 @@ export class ReportPdf {
   }
 
   private static makePageInfo(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     startY: number,
     pageNumber: number,
     letterArray: string[],
@@ -213,7 +213,7 @@ export class ReportPdf {
   }
 
   private static makeItemOfList(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     initPosition: number,
     name: string,
     position: number,
@@ -269,7 +269,7 @@ export class ReportPdf {
   }
 
   private static makeBody(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     listItems: ListItem[],
     withHeader = false,
   ) {
@@ -290,7 +290,7 @@ export class ReportPdf {
   }
 
   private static makePage(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     listItems: ListItem[],
     simpleEvent: SimpleEvent,
     pageNumber: number,
