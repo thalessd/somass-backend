@@ -24,6 +24,7 @@ import { VacanciesService } from '../vacancies/vacancies.service';
 import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
 import { RequestedVacancy } from '../vacancies/models/requested-vacancy';
 import { PublicEvent } from '../event/models/public-event';
+import * as cpf from '@fnando/cpf';
 
 @Injectable()
 export class ClientsService {
@@ -34,7 +35,8 @@ export class ClientsService {
     private readonly clientEscortRepository: Repository<ClientEscort>,
     private eventsService: EventsService,
     private vacanciesService: VacanciesService,
-  ) {}
+  ) {
+  }
 
   private maxPeoplesByClient = 3;
 
@@ -64,7 +66,7 @@ export class ClientsService {
   async enter(enterClientDto: EnterClientDto): Promise<PublicClient> {
     let client = await this.clientRepository.findOne({
       where: {
-        cpf: enterClientDto.cpf,
+        cpf: cpf.strip(enterClientDto.cpf),
       },
     });
 

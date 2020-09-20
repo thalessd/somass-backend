@@ -94,8 +94,9 @@ export class EventsService {
 
   async findAllSimpleEvents(): Promise<SimpleEvent[]> {
     const eventsFounded = await this.eventRepository.find({
+      where: { available: true },
       order: { createdAt: 'DESC' },
-      select: ['id', 'location', 'startTime', 'dayOfWeek', 'vacancy'],
+      select: ['id', 'location', 'startTime', 'dayOfWeek', 'vacancy', 'available'],
     });
 
     const simpleEventPromises = eventsFounded.map(
