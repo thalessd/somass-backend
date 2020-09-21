@@ -9,6 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet());
+  app.enableCors({ origin: ["https://simoes-missa.devdes.io"] })
+
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
