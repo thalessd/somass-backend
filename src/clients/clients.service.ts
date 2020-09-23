@@ -25,6 +25,7 @@ import { UnsubscribeClientDto } from './dto/unsubscribe-client.dto';
 import { RequestedVacancy } from '../vacancies/models/requested-vacancy';
 import { PublicEvent } from '../event/models/public-event';
 import * as cpf from '@fnando/cpf';
+import { ESCORT_MAX } from './constants';
 
 @Injectable()
 export class ClientsService {
@@ -38,7 +39,7 @@ export class ClientsService {
   ) {
   }
 
-  private maxPeoplesByClient = 3;
+  private maxPeoplesByClient = ESCORT_MAX + 1;
 
   private async testIfClientIsSubscribedInFutureEvent(
     client: Client,
