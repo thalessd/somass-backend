@@ -11,6 +11,7 @@ import { AppUtil } from '../shared/helpers/app-util';
 import { SimpleVacancy } from '../vacancies/models/simple-vacancy';
 import { Response } from 'express';
 import { ReportPdf } from './helpers/report-pdf';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EventsService {
@@ -19,6 +20,7 @@ export class EventsService {
     private readonly eventRepository: Repository<Event>,
     private usersService: UsersService,
     private vacanciesService: VacanciesService,
+    private configService: ConfigService
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string): Promise<Event> {
@@ -89,7 +91,9 @@ export class EventsService {
     simpleEvent.occupiedVacancies = occupiedVacancies;
     simpleEvent.simpleVacancy = simpleVacancy;
 
-    return ReportPdf.generate(simpleEvent, response);
+    const eventType = this.configService.get<string>('EVENT_TYPE');
+
+    return ReportPdf.generate(simpleEvent, response, eventType);
   }
 
   async findAllSimpleEvents(): Promise<SimpleEvent[]> {

@@ -24,7 +24,7 @@ export class ReportPdf {
   private static grayLineColor = '#6d6d6d';
   private static greyFooter = '#727272';
 
-  private static goldColor = '#cba139';
+  private static goldColor = '#000f5f';
   private static grayHeader = '#5d5d5d';
 
   private static maxPerPageWithHeader = 33;
@@ -130,8 +130,9 @@ export class ReportPdf {
     simpleEvent: SimpleEvent,
     pageNumber: number,
     letterArray: string[],
+    eventType: string
   ) {
-    let dateTitle = 'Missa, ';
+    let dateTitle = `${eventType}, `;
 
     dateTitle += format(
       new Date(simpleEvent.date),
@@ -295,6 +296,7 @@ export class ReportPdf {
     simpleEvent: SimpleEvent,
     pageNumber: number,
     showHeader: boolean,
+    eventType: string
   ) {
     doc.addPage();
 
@@ -310,7 +312,7 @@ export class ReportPdf {
     );
 
     if (showHeader)
-      this.makeHeader(doc, simpleEvent, pageNumber, firstLetterArray);
+      this.makeHeader(doc, simpleEvent, pageNumber, firstLetterArray, eventType);
     else
       this.makePageInfo(
         doc,
@@ -329,8 +331,8 @@ export class ReportPdf {
     this.makeFooter(doc);
   }
 
-  static generate(simpleEvent: SimpleEvent, response: Response): void {
-    const filename = `RelatorioDeParticipantesDaMissa-${format(
+  static generate(simpleEvent: SimpleEvent, response: Response, eventType: string): void {
+    const filename = `RelatorioDeParticipantes-${format(
       simpleEvent.date,
       'dd-MM-yyyy-HH-mm',
     )}-${simpleEvent.id}`;
@@ -397,7 +399,7 @@ export class ReportPdf {
     });
 
     listItemsByPage.forEach((pageListItems: ListItem[], idx: number) => {
-      this.makePage(doc, pageListItems, simpleEvent, idx + 1, idx === 0);
+      this.makePage(doc, pageListItems, simpleEvent, idx + 1, idx === 0, eventType);
     });
 
     doc.end();

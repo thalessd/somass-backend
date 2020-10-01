@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './event.entity';
 import { UsersModule } from '../users/users.module';
 import { VacanciesModule } from '../vacancies/vacancies.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event]), UsersModule, VacanciesModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Event]), UsersModule, VacanciesModule],
   providers: [EventsService],
   controllers: [EventsController],
   exports: [EventsService],
