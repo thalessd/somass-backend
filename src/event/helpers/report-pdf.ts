@@ -108,7 +108,7 @@ export class ReportPdf {
     const systemInfoTextLineOne = `Versão da Aplicação: ${version}`;
     const systemInfoTextLineTwo = `Data de Geração: ${format(
       new Date(),
-      "dd/MM/yyyy 'às' hh:mm",
+      "dd/MM/yyyy 'às' HH:mm",
     )}`;
 
     doc
