@@ -11,10 +11,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const port = configService.get('PORT');
+  const port = configService.get<string>('PORT');
+  const corsOrigin = configService.get<string>('CORS_ORIGIN')
 
   app.use(helmet());
-  app.enableCors({ origin: ["https://www.simoes-missa.devdes.io", "https://simoes-missa.devdes.io"] })
+
+  // Cada site de origem é separado por virgula
+  app.enableCors({ origin: corsOrigin.split(',') })
 
   rateLimit({
     windowMs: 15 * 60 * 1000,
