@@ -1,4 +1,4 @@
-import * as CryptrLib from 'cryptr';
+import CryptrLib from 'cryptr';
 
 export class Cryptr {
   private static cryptrInstance(key: string): any {
